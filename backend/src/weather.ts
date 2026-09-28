@@ -182,9 +182,69 @@ export class SingaporeWeatherClient {
 
   async getCurrentWeather(latitude: number, longitude: number): Promise<WeatherSnapshot> {
     const forecastPayload = await this.fetchLatestForecastPayload().catch(() => null);
-    return forecastPayload
+    const snapshot = forecastPayload
       ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
       : this.emptyForecastSnapshot();
+
+    const [
+      temperature,
+      humidity,
+      rainfall,
+      windSpeed,
+      windDirection,
+      uvIndex,
+      airQuality,
+      twentyFourHourForecast,
+      fourDayForecast,
+    ] = await Promise.all([
+      this.fetchMetric(() => this.fetchNearestReading('air-temperature', latitude, longitude)),
+      this.fetchMetric(() => this.fetchNearestReading('relative-humidity', latitude, longitude)),
+      this.fetchMetric(() => this.fetchNearestReading('rainfall', latitude, longitude)),
+      this.fetchMetric(() => this.fetchNearestReading('wind-speed', latitude, longitude)),
+      this.fetchMetric(() => this.fetchNearestReading('wind-direction', latitude, longitude)),
+      this.fetchMetric(() => this.fetchUvIndex()),
+      this.fetchAirQuality(latitude, longitude),
+      this.fetchMetric(() => this.fetchTwentyFourHourForecast(latitude, longitude)),
+      this.fetchMetric(() => this.fetchFourDayForecast()),
+    ]);
+
+    return {
+      ...snapshot,
+      observed_at:
+        latestTimestamp([
+          snapshot.observed_at || null,
+          temperature?.timestamp ?? null,
+          humidity?.timestamp ?? null,
+          rainfall?.timestamp ?? null,
+          windSpeed?.timestamp ?? null,
+          windDirection?.timestamp ?? null,
+          uvIndex?.timestamp ?? null,
+          airQuality.timestamp,
+          twentyFourHourForecast?.timestamp ?? null,
+          fourDayForecast?.timestamp ?? null,
+        ]) ?? snapshot.observed_at,
+      temperature_c: temperature?.value ?? null,
+      humidity_percent: humidity?.value ?? null,
+      rainfall_mm: rainfall?.value ?? null,
+      wind_speed_knots: windSpeed?.value ?? null,
+      wind_direction_degrees: windDirection?.value ?? null,
+      uv_index: uvIndex?.value ?? null,
+      psi_twenty_four_hourly: airQuality.psi,
+      pm25_one_hourly: airQuality.pm25,
+      air_quality_region: airQuality.region,
+      forecast_low_c: twentyFourHourForecast?.low ?? null,
+      forecast_high_c: twentyFourHourForecast?.high ?? null,
+      forecast_periods: twentyFourHourForecast?.periods ?? [],
+      daily_forecast: fourDayForecast?.days ?? [],
+    };
+  }
+
+  private async fetchMetric<T>(request: () => Promise<T>): Promise<T | null> {
+    try {
+      return await request();
+    } catch {
+      return null;
+    }
   }
 
   async fetchLatestForecastPayload(): Promise<ForecastPayload> {
@@ -218,7 +278,7 @@ export class SingaporeWeatherClient {
     const valueByStation = new Map(
       values
         .map((entry) => [entry.stationId, Number(entry.value)] as const)
-        .filter((entry): entry is [string, number] => Boolean(entry[0]) && !Number.isNaN(entry[1])),
+        .filter((entry): entry is [string, number] => Boolean(entry[0]) && Number.isFinite(entry[1])),
     );
     const station = nearestStation(stations, latitude, longitude, valueByStation);
     return {
@@ -257,20 +317,25 @@ export class SingaporeWeatherClient {
     timestamp: string | null;
   }> {
     const [psiPayload, pm25Payload] = await Promise.all([
-      this.fetchJson<PsiPayload>(`${this.apiBaseUrl()}/v2/real-time/api/psi`),
-      this.fetchJson<PsiPayload>(`${this.apiBaseUrl()}/v2/real-time/api/pm25`),
+      this.fetchMetric(() =>
+        this.fetchJson<PsiPayload>(`${this.apiBaseUrl()}/v2/real-time/api/psi`),
+      ),
+      this.fetchMetric(() =>
+        this.fetchJson<PsiPayload>(`${this.apiBaseUrl()}/v2/real-time/api/pm25`),
+      ),
     ]);
-    for (const payload of [psiPayload, pm25Payload]) {
-      if (payload.code !== undefined && payload.code !== 0) {
-        throw new WeatherProviderError(
-          payload.errorMsg ?? 'Weather provider returned an air quality error',
-        );
-      }
-    }
+    const validPsiPayload =
+      psiPayload?.code === undefined || psiPayload.code === 0 ? psiPayload : null;
+    const validPm25Payload =
+      pm25Payload?.code === undefined || pm25Payload.code === 0 ? pm25Payload : null;
 
-    const region = nearestRegionName(psiPayload.data?.regionMetadata ?? [], latitude, longitude);
-    const psiItem = psiPayload.data?.items?.[0];
-    const pm25Item = pm25Payload.data?.items?.[0];
+    const region = nearestRegionName(
+      validPsiPayload?.data?.regionMetadata ?? defaultRegions(),
+      latitude,
+      longitude,
+    );
+    const psiItem = validPsiPayload?.data?.items?.[0];
+    const pm25Item = validPm25Payload?.data?.items?.[0];
     return {
       psi: valueForRegion(psiItem?.readings?.psi_twenty_four_hourly, region),
       pm25: valueForRegion(pm25Item?.readings?.pm25_one_hourly, region),
@@ -548,7 +613,7 @@ function latestTimestamp(timestamps: Array<string | null>): string | null {
 
 function numberOrNull(value: number | string | undefined): number | null {
   const number = Number(value);
-  return Number.isNaN(number) ? null : number;
+  return Number.isFinite(number) ? number : null;
 }
 
 function valueForRegion(

@@ -3,10 +3,11 @@ import { LocationIcon, RefreshIcon } from './icons';
 import { HourlyStrip } from './HourlyStrip';
 import { TenDayForecast } from './TenDayForecast';
 import { TileGrid } from './Tiles';
+import { MapCard } from './MapCard';
 import { formatTemperature, formatTime } from './format';
 
 export function Hero() {
-  const { locations, refresh, refreshingId } = useStore();
+  const { locations, refresh, refreshingId, selectedId, select } = useStore();
   const selected = useSelectedLocation();
 
   if (!selected) {
@@ -20,6 +21,7 @@ export function Hero() {
             </p>
           </div>
         </div>
+        <MapCard locations={locations} selectedId={selectedId} onSelect={select} />
       </main>
     );
   }
@@ -61,6 +63,7 @@ export function Hero() {
           <p className="px-2 pb-1 text-center text-xs text-white/65">{validPeriod}</p>
         )}
 
+        <MapCard locations={locations} selectedId={selectedId} onSelect={select} />
         <HourlyStrip periods={selected.weather?.forecast_periods} />
         <TenDayForecast weather={selected.weather} />
         <TileGrid weather={selected.weather} />

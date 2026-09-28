@@ -3,6 +3,7 @@ import {
   listLocations,
   createLocation,
   refreshLocation,
+  deleteLocation,
   logInteraction,
 } from '../api';
 import type { CreateLocationPayload, Location, ProviderProps, StoreValue } from '../types';
@@ -93,6 +94,22 @@ export function StoreProvider({ children }: ProviderProps) {
     [load],
   );
 
+  const remove = useCallback(async (id: number) => {
+    setError(null);
+    try {
+      await deleteLocation(id);
+      setLocations((current) => current.filter((location) => location.id !== id));
+      setSelectedId((current) => (current === id ? null : current));
+      logInteraction('location_deleted', { locationId: id });
+    } catch (err) {
+      setError(err);
+      logInteraction('location_delete_failed', {
+        locationId: id,
+        error: err instanceof Error ? err.message : 'Unknown error',
+      });
+    }
+  }, []);
+
   const value: StoreValue = {
     locations,
     selectedId: effectiveSelectedId,
@@ -107,6 +124,7 @@ export function StoreProvider({ children }: ProviderProps) {
     },
     create,
     refresh,
+    remove,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

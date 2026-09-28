@@ -28,6 +28,69 @@ input:focus-visible {
   @apply outline-none ring-2 ring-white/40 ring-offset-0;
 }
 
+.leaflet-tooltip.weather-map-tooltip {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.leaflet-tooltip.weather-map-tooltip::before {
+  display: none;
+}
+
+.weather-map-label {
+  display: flex;
+  max-width: 10rem;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0.8rem;
+  padding: 0.25rem 0.55rem;
+  background: rgba(17, 24, 39, 0.82);
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.weather-map-label strong {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.weather-map-label span {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 0.65rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weather-map-pin {
+  border: 0;
+  background: transparent;
+}
+
+.weather-map-pin span {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #64748b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.weather-map-pin-selected span {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: -0.125rem;
+  background: #f59e0b;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
