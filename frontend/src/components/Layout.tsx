@@ -39,14 +39,14 @@ export function Layout() {
         >
           {THEMES.map((option) => (
             <option key={option} value={option}>
-            {option === 'alpine-forecast'
-              ? 'Alpine Forecast'
-              : option.includes('-')
-              ? option
-                  .split('-')
-                  .map((word) => word[0].toUpperCase() + word.slice(1))
-                  .join(' ')
-              : option[0].toUpperCase() + option.slice(1)}
+              {option === 'alpine-forecast'
+                ? 'Alpine Forecast'
+                : option.includes('-')
+                  ? option
+                      .split('-')
+                      .map((word) => word[0].toUpperCase() + word.slice(1))
+                      .join(' ')
+                  : option[0].toUpperCase() + option.slice(1)}
             </option>
           ))}
         </select>

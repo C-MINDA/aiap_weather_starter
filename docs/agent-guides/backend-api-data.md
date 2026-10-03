@@ -2,15 +2,15 @@
 
 ## API routes
 
-| Method | Path | Behavior |
-| --- | --- | --- |
-| GET | `/health` | Health check. |
-| GET | `/api/locations` | List saved locations and weather snapshots. |
-| POST | `/api/locations` | Validate Singapore coordinates, create a location, and attempt an initial refresh. |
-| GET | `/api/locations/:locationId` | Return one location. |
-| DELETE | `/api/locations/:locationId` | Delete one location. |
-| POST | `/api/locations/:locationId/refresh` | Fetch and store a fresh weather snapshot. |
-| POST | `/api/logs` | Accept frontend interaction log events. |
+| Method | Path                                 | Behavior                                                                           |
+| ------ | ------------------------------------ | ---------------------------------------------------------------------------------- |
+| GET    | `/health`                            | Health check.                                                                      |
+| GET    | `/api/locations`                     | List saved locations and weather snapshots.                                        |
+| POST   | `/api/locations`                     | Validate Singapore coordinates, create a location, and attempt an initial refresh. |
+| GET    | `/api/locations/:locationId`         | Return one location.                                                               |
+| DELETE | `/api/locations/:locationId`         | Delete one location.                                                               |
+| POST   | `/api/locations/:locationId/refresh` | Fetch and store a fresh weather snapshot.                                          |
+| POST   | `/api/logs`                          | Accept frontend interaction log events.                                            |
 
 The locations router accepts an injected weather client, which lets tests avoid depending on the live provider. Provider errors are handled separately from unexpected server errors; provider calls and raw upstream response mapping belong in `backend/src/weather.ts`.
 

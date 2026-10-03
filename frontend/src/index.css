@@ -11,8 +11,16 @@ body,
 body {
   @apply text-white antialiased;
   background:
-    radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
-    radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%),
+    radial-gradient(
+      120% 80% at 70% 0%,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      90% 70% at 10% 100%,
+      rgba(80, 110, 150, 0.55) 0%,
+      transparent 60%
+    ),
     linear-gradient(170deg, #6f8aa8 0%, #5a7591 35%, #4a627c 65%, #3c5066 100%);
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -21,15 +29,27 @@ body {
 html[data-theme='clear-skies'] body {
   color: #26384a;
   background:
-    radial-gradient(115% 75% at 72% 0%, rgba(255, 255, 255, 0.88) 0%, transparent 59%),
+    radial-gradient(
+      115% 75% at 72% 0%,
+      rgba(255, 255, 255, 0.88) 0%,
+      transparent 59%
+    ),
     linear-gradient(165deg, #d8eefb 0%, #c5e2f3 42%, #a9cde3 100%);
 }
 
 html[data-theme='singapore-morning'] body {
   color: #25473e;
   background:
-    radial-gradient(95% 70% at 78% 0%, rgba(255, 250, 226,  0.92) 0%, transparent 58%),
-    radial-gradient(70% 65% at 0% 100%, rgba(121, 183, 144, 0.36) 0%, transparent 65%),
+    radial-gradient(
+      95% 70% at 78% 0%,
+      rgba(255, 250, 226, 0.92) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      70% 65% at 0% 100%,
+      rgba(121, 183, 144, 0.36) 0%,
+      transparent 65%
+    ),
     linear-gradient(165deg, #d8efe2 0%, #c6e4d1 46%, #a9d2bd 100%);
 }
 
@@ -126,22 +146,38 @@ html[data-theme='clear-skies'] aside [role='button'] {
 html[data-theme='monsoon-radar'] body {
   color: #effaff;
   background:
-    radial-gradient(85% 58% at 78% 6%, rgba(20, 200, 230, 0.2) 0%, transparent 58%),
-    radial-gradient(60% 60% at 0% 100%, rgba(109, 72, 196, 0.18) 0%, transparent 65%),
+    radial-gradient(
+      85% 58% at 78% 6%,
+      rgba(20, 200, 230, 0.2) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      60% 60% at 0% 100%,
+      rgba(109, 72, 196, 0.18) 0%,
+      transparent 65%
+    ),
     linear-gradient(160deg, #101e35 0%, #11182b 55%, #090f1c 100%);
 }
 
 html[data-theme='coastal'] body {
   color: #123b43;
   background:
-    radial-gradient(100% 75% at 75% 0%, rgba(255, 255, 255, 0.8) 0%, transparent 60%),
+    radial-gradient(
+      100% 75% at 75% 0%,
+      rgba(255, 255, 255, 0.8) 0%,
+      transparent 60%
+    ),
     linear-gradient(160deg, #bdece5 0%, #9ad9d9 48%, #79b7c5 100%);
 }
 
 html[data-theme='paper'] body {
   color: #272821;
   background:
-    radial-gradient(100% 75% at 80% 0%, rgba(255, 255, 255, 0.75) 0%, transparent 60%),
+    radial-gradient(
+      100% 75% at 80% 0%,
+      rgba(255, 255, 255, 0.75) 0%,
+      transparent 60%
+    ),
     linear-gradient(160deg, #f1ead9 0%, #e5dcc6 55%, #d8ceb9 100%);
   font-family: Georgia, 'Times New Roman', serif;
 }
@@ -149,14 +185,22 @@ html[data-theme='paper'] body {
 html[data-theme='midnight'] body {
   color: #ecedff;
   background:
-    radial-gradient(100% 75% at 70% 0%, rgba(98, 87, 190, 0.24) 0%, transparent 60%),
+    radial-gradient(
+      100% 75% at 70% 0%,
+      rgba(98, 87, 190, 0.24) 0%,
+      transparent 60%
+    ),
     linear-gradient(160deg, #17172f 0%, #111326 55%, #090b16 100%);
 }
 
 html[data-theme='alpine-forecast'] body {
   color: #18344b;
   background:
-    radial-gradient(100% 70% at 78% 0%, rgba(255, 255, 255, 0.95) 0%, transparent 60%),
+    radial-gradient(
+      100% 70% at 78% 0%,
+      rgba(255, 255, 255, 0.95) 0%,
+      transparent 60%
+    ),
     linear-gradient(160deg, #d9f0fb 0%, #c2e0f0 48%, #a8cadd 100%);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }

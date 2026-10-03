@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { divIcon, latLngBounds, type LatLngExpression } from 'leaflet';
-import { MapContainer, Marker, TileLayer, Tooltip, useMap } from 'react-leaflet';
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  Tooltip,
+  useMap,
+} from 'react-leaflet';
 import { CloseIcon, LocationIcon } from './icons';
 import { formatTemperature } from './format';
 import type { Location } from '../types';
@@ -44,7 +50,9 @@ function FitLocations({ locations }: { locations: Location[] }) {
     }
 
     const bounds = latLngBounds(
-      locations.map(({ latitude, longitude }) => [latitude, longitude] as [number, number]),
+      locations.map(
+        ({ latitude, longitude }) => [latitude, longitude] as [number, number],
+      ),
     );
     map.fitBounds(bounds, { padding: [36, 36], maxZoom: 12 });
   }, [coordinateKey, locations, map]);
@@ -56,7 +64,9 @@ function WeatherMap({ locations, selectedId, onSelect }: MapCardProps) {
   const selectedLocations = useMemo(
     () =>
       locations.filter(
-        (location) => Number.isFinite(location.latitude) && Number.isFinite(location.longitude),
+        (location) =>
+          Number.isFinite(location.latitude) &&
+          Number.isFinite(location.longitude),
       ),
     [locations],
   );
@@ -71,7 +81,8 @@ function WeatherMap({ locations, selectedId, onSelect }: MapCardProps) {
       <TileLayer url={MAP_TILES} attribution={MAP_ATTRIBUTION} />
       <FitLocations locations={selectedLocations} />
       {selectedLocations.map((location) => {
-        const condition = location.weather.condition?.trim() || 'Weather unavailable';
+        const condition =
+          location.weather.condition?.trim() || 'Weather unavailable';
         const icon = createPinIcon(location.id === selectedId);
 
         return (
@@ -82,9 +93,16 @@ function WeatherMap({ locations, selectedId, onSelect }: MapCardProps) {
             eventHandlers={{ click: () => onSelect(location.id) }}
             title={condition}
           >
-            <Tooltip permanent direction="top" offset={[0, -8]} className="weather-map-tooltip">
+            <Tooltip
+              permanent
+              direction="top"
+              offset={[0, -8]}
+              className="weather-map-tooltip"
+            >
               <span className="weather-map-label">
-                <strong>{formatTemperature(location.weather.temperature_c)}</strong>
+                <strong>
+                  {formatTemperature(location.weather.temperature_c)}
+                </strong>
                 <span>{condition}</span>
               </span>
             </Tooltip>
@@ -104,6 +122,7 @@ export function MapCard({ locations, selectedId, onSelect }: MapCardProps) {
     if (!isFullscreen) return;
 
     const previousOverflow = document.body.style.overflow;
+    const expandButton = expandButtonRef.current;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsFullscreen(false);
     };
@@ -114,7 +133,7 @@ export function MapCard({ locations, selectedId, onSelect }: MapCardProps) {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKeyDown);
-      expandButtonRef.current?.focus();
+      expandButton?.focus();
     };
   }, [isFullscreen]);
 
@@ -145,13 +164,21 @@ export function MapCard({ locations, selectedId, onSelect }: MapCardProps) {
             role="region"
             aria-label="Map showing saved locations"
           >
-            <WeatherMap locations={locations} selectedId={selectedId} onSelect={onSelect} />
+            <WeatherMap
+              locations={locations}
+              selectedId={selectedId}
+              onSelect={onSelect}
+            />
           </div>
         ) : (
           <div className="flex h-48 flex-col items-center justify-center gap-2 px-6 text-center">
             <LocationIcon className="h-6 w-6 text-white/50" />
-            <p className="text-sm font-medium text-white/85">Your locations will appear here</p>
-            <p className="text-xs text-white/60">Add a location from the sidebar to see it on the map.</p>
+            <p className="text-sm font-medium text-white/85">
+              Your locations will appear here
+            </p>
+            <p className="text-xs text-white/60">
+              Add a location from the sidebar to see it on the map.
+            </p>
           </div>
         )}
       </section>
@@ -185,7 +212,11 @@ export function MapCard({ locations, selectedId, onSelect }: MapCardProps) {
             role="region"
             aria-label="Fullscreen map showing saved locations"
           >
-            <WeatherMap locations={locations} selectedId={selectedId} onSelect={onSelect} />
+            <WeatherMap
+              locations={locations}
+              selectedId={selectedId}
+              onSelect={onSelect}
+            />
           </div>
         </div>
       )}

@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   listLocations,
   createLocation,
@@ -6,7 +12,12 @@ import {
   deleteLocation,
   logInteraction,
 } from '../api';
-import type { CreateLocationPayload, Location, ProviderProps, StoreValue } from '../types';
+import type {
+  CreateLocationPayload,
+  Location,
+  ProviderProps,
+  StoreValue,
+} from '../types';
 
 const StoreContext = createContext<StoreValue | null>(null);
 
@@ -41,7 +52,9 @@ export function StoreProvider({ children }: ProviderProps) {
 
   const effectiveSelectedId = (() => {
     if (locations.length === 0) return null;
-    return locations.some((l) => l.id === selectedId) ? selectedId : locations[0].id;
+    return locations.some((l) => l.id === selectedId)
+      ? selectedId
+      : locations[0].id;
   })();
 
   const create = useCallback(
@@ -98,7 +111,9 @@ export function StoreProvider({ children }: ProviderProps) {
     setError(null);
     try {
       await deleteLocation(id);
-      setLocations((current) => current.filter((location) => location.id !== id));
+      setLocations((current) =>
+        current.filter((location) => location.id !== id),
+      );
       setSelectedId((current) => (current === id ? null : current));
       logInteraction('location_deleted', { locationId: id });
     } catch (err) {
@@ -127,7 +142,9 @@ export function StoreProvider({ children }: ProviderProps) {
     remove,
   };
 
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+  return (
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  );
 }
 
 export function useStore() {

@@ -1,0 +1,16 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+.vite/
+
+# Generated files and local artifacts
+package-lock.json
+backend/drizzle/
+backend/data/
+backend/logs/
+artifacts/
+
+# Agent tooling
+.agents/
+.codex/
