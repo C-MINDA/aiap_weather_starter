@@ -11,10 +11,7 @@ import {
   it,
   vi,
 } from 'vitest';
-import {
-  WeatherProviderError,
-  type WeatherSnapshot,
-} from '../weather.js';
+import { WeatherProviderError, type WeatherSnapshot } from '../weather.js';
 
 const weather: WeatherSnapshot = {
   condition: 'Cloudy',
@@ -77,10 +74,7 @@ describe('locations API', () => {
   });
 
   it('returns the health status', async () => {
-    await request(app)
-      .get('/health')
-      .expect(200)
-      .expect({ status: 'healthy' });
+    await request(app).get('/health').expect(200).expect({ status: 'healthy' });
   });
 
   it('accepts valid frontend interaction logs', async () => {
@@ -257,4 +251,8 @@ describe('locations API', () => {
       .post(`/api/locations/${created.body.id}/refresh`)
       .expect(502, { detail: 'Weather service unavailable' });
   });
+});
+
+it('fails on purpose', () => {
+  expect(true).toBe(false);
 });
