@@ -252,7 +252,3 @@ describe('locations API', () => {
       .expect(502, { detail: 'Weather service unavailable' });
   });
 });
-
-it('fails on purpose', () => {
-  expect(true).toBe(false);
-});
